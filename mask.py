@@ -14,13 +14,13 @@ for image in image_list:
     pady = 51 - (np.shape(img)[0]%51)
 
     img = np.pad(img, ((0,pady), (0,padx)), 'median')
-    print (np.shape(img))
 
-    for i in range(0, np.shape(img)[1], 51):
-        for j in range(0, np.shape(img)[0], 51):
+    count = 0
+    for i in range(0, np.shape(img)[0], 51): #upto 3009
+        for j in range(0, np.shape(img)[1], 51): #upto 3978
             inp = img[i:i+51, j:j+51]
 
-            print (np.shape(inp))
+
             avg = np.mean(inp)
             var = np.var(inp)
 
