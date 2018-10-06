@@ -22,19 +22,17 @@ for image in image_list:
         for j in range(0, np.shape(img)[1], 51): #upto 3978
             inp = img[i:i+51, j:j+51]
 
-
             avg = np.mean(inp)
             var = np.var(inp)
 
             out = inp - avg
-
             window_mask = np.less(np.absolute(out), 2*np.ones((51,51))*sqrt(var)) + 0
 
             mask[i:i+51, j:j+51] = window_mask
 
 
-# cv2.imshow("Mask", mask) #shows mask only for last image
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+X = np.asarray([[i,j,1] for i in range(np.shape(img)[1]) for j in range(np.shape(img)[0])])
+W = np.diagflat(mask)
+y = image.flatten()
 
-X = [[i,j,1] for i in range(np.size(img))]
+beta = (X.T @ W @ X).I @ (X.T @ W @ y)
