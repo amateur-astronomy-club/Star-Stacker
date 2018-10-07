@@ -55,7 +55,18 @@ for image in image_list:
             ###### LIGHT POLLUTION ESTIMATION ######
             X = np.asarray([[m,l,1] for m in range(i,i+51) for l in range(j,j+51)])
             W = sp.diags(window_mask.flatten())
-         
+
+			y_blue = inp[:,:,0]
+			y_green = inp[:,:,1]
+			y_red = inp[:,:,2]
+
+			beta_blue = (np.linalg.inv(X.T @ W @ X)) @ (X.T @ W @ y_blue)
+			beta_green = (np.linalg.inv(X.T @ W @ X)) @ (X.T @ W @ y_green)
+			beta_red = (np.linalg.inv(X.T @ W @ X)) @ (X.T @ W @ y_red)
+
+			light_model_blue[i:i+51,j:j+51] = np.reshape(X@beta_blue,(np.shape(img)[0], np.shape(img)[1]))
+			light_model_geen[i:i+51,j:j+51] = np.reshape(X@beta_geen,(np.shape(img)[0], np.shape(img)[1]))
+			light_model_red[i:i+51,j:j+51] = np.reshape(X@beta_red,(np.shape(img)[0], np.shape(img)[1]))
 
             for k in range(3):
                 y = inp[:,:,k].flatten()
