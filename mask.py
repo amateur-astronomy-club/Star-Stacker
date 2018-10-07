@@ -37,6 +37,8 @@ for image in image_list:
 
     image = np.dstack((blue,green,red))
 
+    light_model = np.zeros(np.shape(image))
+
     mask = np.zeros((np.shape(image)[0], np.shape(image)[1]))
     for i in range(0, np.shape(image)[0], 51): #upto 3009
         for j in range(0, np.shape(image)[1], 51): #upto 3978
@@ -51,10 +53,9 @@ for image in image_list:
             mask[i:i+51, j:j+51] = window_mask
 
             ###### LIGHT POLLUTION ESTIMATION ######
-            X = np.asarray([[m,l,1] for l in range(51) for m in range(51)])
+            X = np.asarray([[m,l,1] for m in range(i,i+51) for l in range(j,j+51)])
             W = sp.diags(window_mask.flatten())
-
-            light_model = np.zeros(np.shape(image))
+         
 
             for k in range(3):
                 y = inp[:,:,k].flatten()
