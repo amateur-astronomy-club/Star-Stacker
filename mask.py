@@ -16,14 +16,14 @@ def adjust_gamma(image, gamma=1.0):
 	return cv2.LUT(image, table)
 
 
-images = glob('Stars/input.jpg')
+images = glob('Stars/img*.jpeg')
 
 image_list = [cv2.imread(i) for i in images]
 
+count = 1
 for image in image_list:
 	image = adjust_gamma(image,2)
 	# image = cv2.resize(image,(1200,600))
-	print(np.max(image))
 	padx = 51 - (np.shape(image)[1]%51)
 	pady = 51 - (np.shape(image)[0]%51)
 
@@ -37,7 +37,7 @@ for image in image_list:
 
 	image = np.dstack((blue,green,red))
 
-	light_model = np.zeros(np.shape(image), dtype='uint8') #the datatype HAS to be uint8 to work with opencv
+	light_model = np.zeros(np.shape(image)) #the datatype HAS to be uint8 to work with opencv
 
 	mask = np.zeros((np.shape(image)[0], np.shape(image)[1]))
 	for i in range(0, np.shape(image)[0], 51): #upto 3009
@@ -62,8 +62,12 @@ for image in image_list:
 				light_model[i:i+51,j:j+51,k] = np.reshape(X@beta,(np.shape(img)[0], np.shape(img)[1]))
 
 
-# light_model = cv2.resize(light_model,(600,1200))
-print(light_model)
-cv2.imshow("Removed light pollution", light_model)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+	# light_model = cv2.resize(light_model,(600,1200))
+	# print(light_model)
+	ideal = image-light_model
+	ideal = (ideal.clip(min=0)).astype('uint8')
+	# print(image[0:10,0:10,:])
+	# print(light_model[0:10,0:10,:])
+	# print(ideal[0:10,0:10,:])
+	cv2.imwrite("Stars/out"+str(count)+".jpeg", ideal)
+	count += 1
