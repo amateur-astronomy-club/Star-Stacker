@@ -54,23 +54,50 @@ for image in image_list:
     blobs = blob_dog(image_gray, max_sigma=30, threshold=.1).astype('uint8')
     blobs[:, 2] = blobs[:, 2] * sqrt(2)
 
-    print(blobs)
-    print(np.shape(blobs))
-    print (blobs[0])
+    # print(blobs)
+    # print(np.shape(blobs))
+    # print (blobs[0][0])
     for i in range(np.shape(blobs)[0]):
-        inp = image[blobs[i,:][0]-32:blobs[i,:][0]+32,blobs[i,:][1]-32:blobs[i,:][1]+32,:]
-        print(inp)
+        x = blobs[i][1]
+        y = blobs[i][0]
+
+        if x < 32:
+            x_lower = 0
+            x_upper = 64
+        elif x > np.shape(image)[1] - 32:
+            x_lower = np.shape(image)[1] - 64
+            x_upper = np.shape(image)[1]
+        else:
+            x_lower =  x - 32
+            x_upper = x + 32
+
+
+        if y < 32:
+            y_lower = 0
+            y_upper = 64
+        elif y > np.shape(image)[0] - 32:
+            y_lower = np.shape(image)[0] - 64
+            y_upper = np.shape(image)[0]
+        else:
+            y_lower =  y - 32
+            y_upper = y + 32
+        inp = image[y_lower:y_upper,x_lower:x_upper,:]
+        # print(inp)
 
         img = np.sum(inp, axis = 2)
-        print(img)
+        # print(img)
 
         avg = np.mean(img)
         var = np.var(img)
 
         out = img - avg
-        print(out)
 
         window = (np.less(np.absolute(out), 2*np.ones((64,64))*sqrt(var)) + 0).astype('uint8')
-        print (window)
-        image[i:i+64,j:j+64,:] *= window
-        print ("YAAAAYYYYYY")
+        # print (window)
+        for i in range(64):
+            for j in range(64):
+                image[y_lower+j,x_lower+i,:] *= window[j,i]
+
+    cv2.imshow('SKYYYYY',cv2.resize(image,(900,600)))
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
