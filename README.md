@@ -3,9 +3,9 @@ Stacking multiple poor quality night sky images to extract all possible stars
 
 ### Steps - 
 * **```DONE```** Building a star mask
-* **```WORKING ON```** Estimating light pollution
-* **```TO BE DONE AFTER PREVIOUS STEP```** Extracting stars
-* **```TO BE DONE AFTER PREVIOUS STEP```** Alligning stars
-* **```TO BE DONE AFTER PREVIOUS STEP```** Stacking frames
+* **```DONE```** Estimating light pollution
+* **```SKIPPED```** Extracting stars
+* **```DONE```** Alligning stars
+* **```DONE```** Stacking frames
 
 
